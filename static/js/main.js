@@ -46,7 +46,7 @@ function swapSpeedUnits() {
 
 ///Program Logic
 function updateAverage(positionData) {
-    var currentSpeed = positionData.speed | 0;
+    var currentSpeed = positionData.coords.speed | 0;
     var now = new Date().getTime() / 1000;
     var reading = {
         speed: currentSpeed,
