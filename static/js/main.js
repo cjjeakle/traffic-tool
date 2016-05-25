@@ -81,7 +81,7 @@ function updateAverage(positionData) {
     // Remove readings older than 1 min
     while((curTime - readings1Min[0].time) > 60) {
         var removedReading = readings1Min.shift();
-        speedSum1Min -= parseFloat(removedReading.speedKMH);
+        speedSum1Min -= removedReading.speedKMH;
     };
 
     // Remove readings older than 5 min
