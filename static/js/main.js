@@ -46,38 +46,87 @@ function swapSpeedUnits() {
 
 ///Program Logic
 function updateAverage(positionData) {
-    var currentSpeed = positionData.coords.speed;
-    var now = new Date().getTime() / 1000;
+    var curTime = new Date().getTime() / 1000;
+    var curLat = positionData.coords.latitude;
+    var curLon = positionData.coords.longitude;
+
+    var prevTime;
+    var prevLat;
+    var prevLon;
+    if (readings1Min.length) {
+        prevTime = readings1Min[readings1Min.length - 1].time;
+        prevLat = readings1Min[readings1Min.length - 1].lat;
+        prevLon = readings1Min[readings1Min.length - 1].lon;
+    } else {
+        prevTime = curTime - 1;
+        prevLat = curLat;
+        prevLon = curLon;
+    }
+    var distanceKM = distance(curLon, curLat, prevLon, prevLat);
+    
+    var speedKMH = (distanceKM / ((curTime - prevTime) / 60 / 60));
     var reading = {
-        speed: currentSpeed,
-        time: now
+        speedKMH: speedKMH,
+        lat: positionData.coords.latitude,
+        lon: positionData.coords.longitude,
+        time: curTime
     };
 
-    speedSum1Min += currentSpeed;
+    speedSum1Min += speedKMH;
     readings1Min.push(reading);
 
-    speedSum5Min += currentSpeed;
+    speedSum5Min += speedKMH;
     readings5Min.push(reading);
 
     // Remove readings older than 1 min
-    while((now - readings1Min[0].time) > 60) {
+    while((curTime - readings1Min[0].time) > 60) {
         var removedReading = readings1Min.shift();
-        speedSum1Min -= removedReading.speed;
+        speedSum1Min -= parseFloat(removedReading.speedKMH);
     };
 
     // Remove readings older than 5 min
-    while((now - readings5Min[0].time) > (60 * 5)) {
+    while((curTime - readings5Min[0].time) > (60 * 5)) {
         var removedReading = readings5Min.shift();
-        speedSum5Min -= removedReading.speed;
+        speedSum5Min -= removedReading.speedKMH;
     };
 
-    updateUI(currentSpeed);
+    updateUI(speedKMH);
 }
 
-function updateUI(currentSpeed) {
-    var averageSpeed = getCurrentAverage();
-    $('#averageSpeed').text(formatSpeed(averageSpeed));
-    $('#currentSpeed').text(formatSpeed(currentSpeed));
+/*
+Begin snippet from Stack Overflow
+https://stackoverflow.com/questions/13840516
+-
+Authors
+Frank van Puffelen, https://stackoverflow.com/users/209103/frank-van-puffelen
+onemanarmy, https://stackoverflow.com/users/805003/onemanarmy
+-
+cc by-sa 3.0 license, https://creativecommons.org/licenses/by-sa/3.0/
+*/
+function distance(lon1, lat1, lon2, lat2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = (lat2-lat1).toRad();  // Javascript functions in radians
+  var dLon = (lon2-lon1).toRad(); 
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+if (typeof(Number.prototype.toRad) === "undefined") {
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+  }
+}
+/*
+End snippet from Stack Overflow
+*/
+
+function updateUI(currentSpeedKMH) {
+    var averageSpeedKMH = getCurrentAverage();
+    $('#averageSpeed').text(formatSpeed(averageSpeedKMH));
+    $('#currentSpeed').text(formatSpeed(currentSpeedKMH));
 }
 
 function getCurrentAverage() {
@@ -90,11 +139,11 @@ function getCurrentAverage() {
     }
 }
 
-function formatSpeed(speedMetersPerSec) {
+function formatSpeed(speedKMH) {
     if (speedUnits == mph) {
-        return speedMetersPerSec * 2.237; // approximate
+        return speedKMH * 0.621; // approximate
     } else if (speedUnits == kmh) {
-        return speedMetersPerSec * 3.6;
+        return speedKMH
     } else {
         throw speedUnitsInvalid;
     }
@@ -109,9 +158,6 @@ function geolocationError(error) {
             break;
         case error.POSITION_UNAVAILABLE:
             alert('Position unavailable, cannot determine your speed');
-            break;
-        case error.TIMEOUT:
-            alert('Application timeout while determining your speed.')
             break;
         default:
             alert('An error occurred while determining your speed.');
@@ -132,4 +178,3 @@ function positionAquired(positionData) {
     setTimeout(addSpeedReadings, 1000);
 }
 addSpeedReadings();
-
