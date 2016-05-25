@@ -159,6 +159,9 @@ function geolocationError(error) {
         case error.POSITION_UNAVAILABLE:
             alert('Position unavailable, cannot determine your speed');
             break;
+        case error.TIMEOUT:
+            alert('Application timeout while determining your speed.')
+            break;
         default:
             alert('An error occurred while determining your speed.');
             break;
@@ -171,7 +174,7 @@ function geolocationError(error) {
 // was not predictably providing updated speed info
 // and setInterval events can needlessly stack.
 function addSpeedReadings() {
-    navigator.geolocation.getCurrentPosition(positionAquired, geolocationError);
+    navigator.geolocation.getCurrentPosition(positionAquired, geolocationError, {maximumAge:2500, timeout:10000, enableHighAccuracy: true});
 }
 function positionAquired(positionData) {
     updateAverage(positionData);
