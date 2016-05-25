@@ -46,7 +46,7 @@ function swapSpeedUnits() {
 
 ///Program Logic
 function updateAverage(positionData) {
-    var currentSpeed = positionData.coords.speed | 0;
+    var currentSpeed = positionData.coords.speed;
     var now = new Date().getTime() / 1000;
     var reading = {
         speed: currentSpeed,
@@ -100,5 +100,36 @@ function formatSpeed(speedMetersPerSec) {
     }
 }
 
+function geolocationError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert('Permission denied, cannot determine your speed.'
+                + '\n\n'
+                + 'If you\'re using Chrome, this can automatically happen because geolocation is only allowed over HTTPS.');
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert('Position unavailable, cannot determine your speed');
+            break;
+        case error.TIMEOUT:
+            alert('Application timeout while determining your speed.')
+            break;
+        default:
+            alert('An error occurred while determining your speed.');
+            break;
+    }
+}
+
 ///Watch for position data updates
-navigator.geolocation.watchPosition(updateAverage);
+// This is done using recursive calls to setTimeout, 
+// because navigator.geolocation.watchPosition
+// was not predictably providing updated speed info
+// and setInterval events can needlessly stack.
+function addSpeedReadings() {
+    navigator.geolocation.getCurrentPosition(positionAquired, geolocationError);
+}
+function positionAquired(positionData) {
+    updateAverage(positionData);
+    setTimeout(addSpeedReadings, 1000);
+}
+addSpeedReadings();
+
