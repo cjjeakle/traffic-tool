@@ -169,15 +169,4 @@ function geolocationError(error) {
 }
 
 ///Watch for position data updates
-// This is done using recursive calls to setTimeout, 
-// because navigator.geolocation.watchPosition
-// was not predictably providing updated speed info
-// and setInterval events can needlessly stack.
-function addSpeedReadings() {
-    navigator.geolocation.getCurrentPosition(positionAquired, geolocationError, {maximumAge:2500, timeout:10000, enableHighAccuracy: true});
-}
-function positionAquired(positionData) {
-    updateAverage(positionData);
-    setTimeout(addSpeedReadings, 1000);
-}
-addSpeedReadings();
+navigator.geolocation.watchPosition(updateAverage, geolocationError, {maximumAge: 5000, timeout:10000, enableHighAccuracy: true});
