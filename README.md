@@ -3,6 +3,21 @@ A tool to determine your average speed in stop-and-go traffic over certain time 
 
 Visit [this project's page](http://cjjeakle.github.io/traffic-tool) from your smartphone to try it out!
 
+## Findings:
+Unfortunately, it looks like this project did not work as well as hoped. In heavy stop-and-go traffic the idea worked well enough, but in more typical traffic with sporadic slowdowns your average speed changes too drastically. As a result, it doesn't make sense to simply target your past average speed. 
+
+I've found using a generous follow distance to the car in front of you is far more practical in such situations, as you can simply coast to a lower speed before needing to hit the brakes.
+
+Other known limitations:
+* Javascript geolocation API readings are too imprecise for calculating an accurate speed in slow traffic
+  * This is even true with the enableHighAccuracy flag set
+* All speed readings are presently being considered with the same weight, so readings corresponding to smaller windows of time are disproportionately represented
+* This page will require HTTPS to work in Google Chrome
+  * Chrome has disabled the geolocation API on origins served over HTTP, and other browsers are likely to follow
+  * Because I'm hosting on GitHub pages, and I've provided a custom CNAME alias for my cjjeakle.github.io domain, it's impractical to provide HTTPS connectivity for this site
+
+In light of these findings, I've deprecated this project. I'll leave it up, however, to act as a quick reference for any future HTML geolocation API projects.
+
 ## The Premise:
 I designed this tool after reading [an article](http://trafficwaves.org/) likening traffic slow-downs to waves. It made incredible sense. By traveling at or below your average speed across a window of traffic, you ideally won't need to slow down for temporary pockets of low speed.
 
