@@ -4,14 +4,17 @@ A tool to determine your average speed in stop-and-go traffic over certain time 
 Visit [this project's page](http://cjjeakle.github.io/traffic-tool) from your smartphone to try it out!
 
 ## Findings:
-Unfortunately, it looks like this project did not work as well as hoped. In heavy stop-and-go traffic the idea worked well enough, but in more typical traffic with sporadic slowdowns your average speed changes too drastically. As a result, it doesn't make sense to simply target your past average speed. 
+Unfortunately, it looks like this project did not work as well as I had hoped. In heavy stop-and-go traffic it's possible the idea would work, but in more typical traffic with sporadic slowdowns your average speed changes too drastically across time intervals, and even between lanes. As a result, it doesn't make sense to simply target your past average speed to avoid slowing down. 
 
-I've found using a generous follow distance to the car in front of you is far more practical in such situations, as you can simply coast to a lower speed before needing to hit the brakes.
+I've found using a generous follow distance to the car in front of you is far more practical in traffic jams, as you can simply coast to a lower speed before needing to hit the brakes.
 
 Other known limitations:
-* Javascript geolocation API readings are too imprecise for calculating an accurate speed in slow traffic
-  * This is even true with the enableHighAccuracy flag set
-* All speed readings are presently being considered with the same weight, so readings corresponding to smaller windows of time are disproportionately represented
+* There is no universal HTML API to prevent smartphone screens from locking (which suspends JS execution)
+ * As a consequence, users must periodically tap the screen to keep the phone awake
+ * I find this is too much of a distraction to feel comfortable with people using this app while driving
+   * More generally, I find only passive sources of information are useful while driving, such as a GPS screen or speedometer
+* This app's speed calculations are quite accurate on open roads, but there is a fair amount of noise at low speeds where the app would be most useful
+  * This is even true with the geolocation API's enableHighAccuracy flag set
 * This page will require HTTPS to work in Google Chrome
   * Chrome has disabled the geolocation API on origins served over HTTP, and other browsers are likely to follow
   * Because I'm hosting on GitHub pages, and I've provided a custom CNAME alias for my cjjeakle.github.io domain, it's impractical to provide HTTPS connectivity for this site
@@ -19,11 +22,11 @@ Other known limitations:
 In light of these findings, I've deprecated this project. I'll leave it up, however, to act as a quick reference for any future HTML geolocation API projects.
 
 ## The Premise:
-I designed this tool after reading [an article](http://trafficwaves.org/) likening traffic slow-downs to waves. It made incredible sense. By traveling at or below your average speed across a window of traffic, you ideally won't need to slow down for temporary pockets of low speed.
+I designed this tool after reading through [a site](http://trafficwaves.org/) likening traffic slow-downs to compression in a longitudinal wave. The comparison made incredible sense. Based on this, one can travel at or below their average speed across a window of traffic and smooth out the more compressed sections. This allows you to travel at a constant rate, avoiding temporary pockets of low speed.
 
-Beyond that article, this [Reddit thread](https://www.reddit.com/r/askscience/comments/1lqdzo/traffic_engineers_what_causes_the_pulsatile_flow/) features some intuitive, in-depth videos and explanations.
+Beyond that site, this [Reddit thread](https://www.reddit.com/r/askscience/comments/1lqdzo/traffic_engineers_what_causes_the_pulsatile_flow/) features some intuitive, in-depth videos and explanations.
 
-This tool was created to calculate a moving average of your speed, which gives you a ballpark target speed to maintain. By traveling at or below the average of your stopping and going, you can defer or even avoid slowing down in traffic. This can make for a smoother ride, less wear on your car, and perhaps even a less frustrating day.
+This tool calculates a moving average of your speed, which gives you a ballpark target speed to maintain. By traveling at or below the average of your stopping and going, you can defer or even avoid slowing down in traffic. This can make for a smoother ride, less wear on your car, and perhaps even a less frustrating day.
 
 Of course, this tool is an experiment. It's entirely possible knowing your current average speed over some window in time will have no bearing on your average speed during upcoming stretches of time. As always with free software and experiments of this sort, caveat emptor.
 
