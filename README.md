@@ -31,6 +31,20 @@ This tool calculates a moving average of your speed, which gives you a ballpark 
 Of course, this tool is an experiment. It's entirely possible knowing your current average speed over some window in time will have no bearing on your average speed during upcoming stretches of time. As always with free software and experiments of this sort, caveat emptor.
 
 ## License:
+### Third party code:
+`/static/js/main.js` contains an implementation of the Haversine formula from Stack Overflow.
+This code is denoted and attributed in the file's comments, and is used under Stack Overflow's Creative Commons BY-SA 3.0 license.
+
+The license text is available at: https://creativecommons.org/licenses/by-sa/3.0/
+
+The Stack Overflow post:
+* https://stackoverflow.com/questions/13840516
+
+The authors of the used snippet:
+* Frank van Puffelen, https://stackoverflow.com/users/209103/frank-van-puffelen
+* onemanarmy, https://stackoverflow.com/users/805003/onemanarmy
+
+### License for all other code:
 The MIT License (MIT)
 
 Copyright (c) 2016 Chris Jeakle
@@ -52,3 +66,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
